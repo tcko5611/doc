@@ -91,6 +91,14 @@ qt5_use_modules(test_serial Core Widgets)
 ```
 
 # special utility
+## add_compile_options(-fopenmp)
+This option will only influence the compile object file, and if you use
+```
+set(GCC_COVERAGE_COMPILE_FLAGS "-fopenmp")
+set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+```
+It will also affect in link process.
+
 ## add_custom_command
 ### target
 ```

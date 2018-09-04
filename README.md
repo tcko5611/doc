@@ -6,4 +6,5 @@
 * [markdown](markdown/README.md)
 * [cmake](cmake/README.md)
 * [git](git/README.md)
+* [openmp](openmp/README.md)
 
