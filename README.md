@@ -7,4 +7,5 @@
 * [cmake](cmake/README.md)
 * [git](git/README.md)
 * [openmp](openmp/README.md)
+* [bash](bash/README.md)
 
