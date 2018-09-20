@@ -8,4 +8,4 @@
 * [git](git/README.md)
 * [openmp](openmp/README.md)
 * [bash](bash/README.md)
-
+* [python](python/README.md)
