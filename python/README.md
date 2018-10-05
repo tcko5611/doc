@@ -3,3 +3,9 @@
 [Basic](basic.md)
 
 [PyQt](pyqt.md)
+
+[Regular Expression](re.md)
+
+[argparse](argparse.md)
+
+[debug](debugger.md)
