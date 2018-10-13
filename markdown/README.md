@@ -9,6 +9,7 @@
   * [link](#link)
   * [itemize and enumerate](#itemize-and-enumerate)
   * [table of contents example](#table-of-contents-example)
+  * [special character](#special-character)
 
 # syntax
 ## picture
@@ -94,4 +95,10 @@ second line
   * [itemize and enumerate](#itemize-and-enumerate)
   * [table of contents](#table-of-contents)
 
+```
+
+## special character
+```
+> &gt;
+< &lt;
 ```

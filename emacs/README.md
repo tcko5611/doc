@@ -9,3 +9,8 @@
 (setq load-path (cons (expand-file-name "~/emacs/lisp") load-path))
 (require 'markdown-mode)
 ```
+
+# Edit Commands
+
+## Numeric Arguments
+* **Ctrl-u** n, repeat n times for the next command

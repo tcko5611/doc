@@ -24,7 +24,7 @@
 * [function and macro](#function-and-macro)
   
 # Build system
-
+* Using CMAKELists.txt file for each target
 * platform: -G 'MSYS Makefiles'
 * build type: 
   * -DCMAKE_BUILD_TYPE=Debug

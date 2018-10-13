@@ -1,10 +1,38 @@
 [HOME](README.md)
 
 # Variables
-* str : 'aa'
+
+## Basic: int, float 
 * int : 10
 * float : 10.0
-* list : a = [1, 2, 3]
+
+## String 
+* str : 'aa'
+
+### format
+* string
+```
+'{2}, {1}, {0}'.format(*'abc') to 'c, b, a'
+```
+* argument
+```
+>>> coord = {'latitude': '37.24N', 'longitude': '-115.81W'}
+>>> 'Coordinates: {latitude}, {longitude}'.format(**coord)
+'Coordinates: 37.24N, -115.81W'
+```
+* float
+```
+>>> '{:+f}; {:+f}'.format(3.14, -3.14)  # show it always
+'+3.140000; -3.140000'
+```
+
+### functions
+* str.split(s), len(str), str.strip(), str.rstrip(), str.lstrip()
+* str.find(sub), str.rfind(sub), str.index(sub), str.rindex(sub)
+* s1.join(s2)
+
+## list
+* a = [1, 2, 3]
   * a.insert(2, 4) # [1,2,4,3]
   * a.appned(5) # [1, 2,4,3,5]
   * a.index(4) # 2
@@ -13,15 +41,19 @@
   * a.sort() # [1, 2, 4, 5]
   * del a[0] # [2, 4, 5]
   * for b in a :...
-* dict : a = {'a': 10, 'b': 20}
+## dict
+* a = {'a': 10, 'b': 20}
   * for k, v in a.items(): de...
   * for k in a.keys(): ...
   * for k in a.keys(): ...
   * a['c'] = 10
-* tuple : a = ('a', 'b')
-* set : a = {1, 2}
+## tuple
+* a = ('a', 'b')
+## set
+* a = {1, 2}
   * for b in a :...
 
+ 
 # Input
 * read from command line
   * use sys.argv
@@ -128,25 +160,3 @@ class MainWindow(base, form):
   ....
 ```
 
-# PyQt 
-* direct include mainwinodw.ui
-```
-base, form = uic.loadUiType('mainwindow.ui')
-class MainWindow(base, form):
-  def __init__(self, parent = None, jsonFile = None):
-    super(MainWindow, self).__init__(parent)
-	self.setupUi(self)
-```
-* using pyuic5 and include Ui_mainwindow.py
-  * in Makefile
-  ```
-  pyuic5 mainwindow.ui -o Ui_mainwindow.py
-  ```
-  * in py file
-  ```
-  from Ui_mainwindow import Ui_MainWindow
-  class MainWindow(QMainWindow, Ui_MainWindow):
-  def __init__(self, parent = None, jsonFile = None):
-    super(MainWindow, self).__init__(parent)
-    self.setupUi(self)
-  ```
