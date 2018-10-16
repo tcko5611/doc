@@ -34,6 +34,7 @@
 $ mkdir Debug
 $ cd Debug
 $ cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug
+$ make VERBOSE=1
 ```
 
 # Basic structure
