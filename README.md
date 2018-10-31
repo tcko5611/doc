@@ -9,3 +9,4 @@
 * [openmp](openmp/README.md)
 * [bash](bash/README.md)
 * [python](python/README.md)
+* [doxygen](doxygen/README.md)

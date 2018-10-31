@@ -22,6 +22,7 @@
 * expr expression: print out the result of the expression. expr 5 + 4 # 9, expr 5+4 # 5+4
 * $(( expression )): Return the result of the expression. a=$(( 4 + 5 )) #echo $a # 9
 * ${#var}:Return the length of the variable var. # b=4953 echo ${#b} # 4
+
 # if statements
 * if: Perform a set of commands if a test is true.
 * else: If the test is not true then perform a different set of commands.
@@ -29,6 +30,7 @@
 * &&: Perform the and operation.
 * ||: Perform the or operation.
 * case: Choose a set of commands to execute depending on a string matching a particular pattern.
+
 # Test expression
 * ! EXPRESSION:	The EXPRESSION is false.
 * -n STRING: The length of STRING is greater than zero.
@@ -44,6 +46,7 @@
 * -s FILE: FILE exists and it's size is greater than zero (ie. it is not empty).
 * -w FILE: FILE exists and the write permission is granted.
 * -x FILE: FILE exists and the execute permission is granted.
+
 # Loops
 * while do done: Perform a set of commands while a test is true.
 * until do done: Perform a set of commands until a test is true.
@@ -51,6 +54,7 @@
 * break: Exit the currently running loop.
 * continue: Stop this iteration of the loop and begin the next iteration.
 * select do done: Display a simple menu system for selecting items from a list.
+
 # Functions
 * function <name> or <name> (): Create a function called name.
 * return <value>: Exit the function with a return status of value.
