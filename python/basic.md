@@ -34,21 +34,25 @@
 ## list
 * a = [1, 2, 3]
   * a.insert(2, 4) # [1,2,4,3]
-  * a.appned(5) # [1, 2,4,3,5]
+  * a.append(5) # [1, 2,4,3,5]
+  * a.pop() # 5
   * a.index(4) # 2
   * a.remove(3) # [1, 2, 4, 5]
   * a.reverse() # [5, 4, 2, 1]
   * a.sort() # [1, 2, 4, 5]
   * del a[0] # [2, 4, 5]
   * for b in a :...
+
 ## dict
 * a = {'a': 10, 'b': 20}
   * for k, v in a.items(): de...
   * for k in a.keys(): ...
   * for k in a.keys(): ...
   * a['c'] = 10
+
 ## tuple
 * a = ('a', 'b')
+
 ## set
 * a = {1, 2}
   * for b in a :...
@@ -159,4 +163,20 @@ class MainWindow(base, form):
     super(MainWindow, self).__init__(parent)
   ....
 ```
+__init__ and __call__
+```
+class Foo:
+    def __init__(self, a, b, c):
+        # ...
 
+x = Foo(1, 2, 3) # __init__
+```
+__call__
+```
+class Foo:
+    def __call__(self, a, b, c):
+        # ...
+
+x = Foo()
+x(1, 2, 3) # __call__
+```

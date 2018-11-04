@@ -4,6 +4,8 @@
 * [Use Ui files](#Use-Ui-files)
 * [Use RC files](#Use-RC-files)
 * [Signals and Slots](#Signals-and-Slots)
+* [qtreemodel example](#qtreemodel)
+* [qtreewidget example](#qtreewidget)
 
 # main program 
 Using like cpp program structure
@@ -121,23 +123,23 @@ class Foo(QObject):
 
 # qtreemodel 
 The model class need to modify the following functions
-* flags() : indicate the cell property
-* data() : get the reall data
-* headerData() : header data
-* columnCount() : column number
-* rowCount() : the QModelIndex row count
-* index() : Build QModelIndex system
-* parent() : Build QModelIndex system
+* flags() : indicate the cell property, **override**
+* data() : get the reall data, **override**
+* headerData() : header data, **override**
+* columnCount() : column number, **override**
+* rowCount() : the QModelIndex row count, **override**
+* index() : Build QModelIndex system, **override**
+* parent() : Build QModelIndex system, **override**
 
 ![qmodelindex](qmodelindex.PNG)
 
 If the model need to modify data, we also need to write the following functions
-* setData() : write data
-* setHeaderData : write header data
-* insertRows()
-* insertColumns()
-* removeRows()
-* removeColumns()
+* setData() : write data, **override**
+* setHeaderData : write header data, **override**
+* insertRows(), **override**
+* insertColumns(), **override**
+* removeRows(), **override**
+* removeColumns(), **override**
 
 # qtreewidget
 ```
