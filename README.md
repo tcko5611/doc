@@ -5,6 +5,7 @@
 * [blender](blender/README.md)
 * [markdown](markdown/README.md)
 * [cmake](cmake/README.md)
+* [make](make/README.md)
 * [git](git/README.md)
 * [openmp](openmp/README.md)
 * [bash](bash/README.md)
