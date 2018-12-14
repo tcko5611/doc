@@ -10,6 +10,13 @@
 (require 'markdown-mode)
 ```
 
+# Move in file
+* C-M-a
+* C-M-e
+	move in a function
+* C-M-p
+* C-M-n
+	move in a parenthesis
 # Edit Commands
 
 ## Numeric Arguments

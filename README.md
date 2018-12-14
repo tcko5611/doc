@@ -12,3 +12,4 @@
 * [python](python/README.md)
 * [cpp](cpp/README.md)
 * [doxygen](doxygen/README.md)
+* [vim](vim/README.md)
