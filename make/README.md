@@ -5,11 +5,17 @@
 * [Build system](#Build-system)
 
 # Basic idea
-Create binary in different directory from source dir, each Makefile will first include "make.incl", and at the end include "make.incl2"
+1. Create object file in different directory ($(OBJROOT)) from source
+dir ($(ROOT)) to avoid dirty the source tree.
+2. The generate library ($(OBJROOT)/lib) and binary ($(OBJROOT)/bin)
+   files are in the directory we specify.
+3. Auto generate the dependency files and include it.
+4. Most work should be done in global include file "make.incl" and
+   "make.incl2".
 
 # Detail of global "make.incl" and "make.incl2"
 ## "make.incl" : 
-1. setting root and related variables:
+1. define $(ROOT), $(OBJROOT), $(BIN_DIR) and $(LIB_DIR) variables:
 ```
 ROOT := $(strip $(patsubst %/make.incl, %,$(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST))))
 OBJROOT := $(ROOT)/object_root
@@ -56,16 +62,35 @@ LIBS := $(QT_LIBS) -pthread -ldl -lz
 ```
 
 ## "make.incl2" :
-1. define create_dirs and clean target
+1. Include the depdency files, should be here for 
+   DEP_FILES needed after SOURCE_FILE to define in the Makefile 
 ```
+include $(DEP_FILES)
+```
+
+2. define all, create_dirs and clean target. 
+   if the Makefile has defined the variable, then it will execute, 
+   otherwise there is no effect on it)
+
+```
+all: create_dirs $(EXE) $(MODULE)
+
+$(EXE): $(QT_UICSOURCE) $(OBJECT_FILE) 
+	$(CXX) -o $(BIN_DIR)/$@ $(OBJECT_FILE) $(LDFLAGS) $(LOCAL_LIBS) $(LIBS) 
+
+$(MODULE): $(QT_UICSOURCE) $(OBJECT_FILE)
+	$(AR) -cvq $(LIB_DIR)/lib$@.a $(OBJECT_FILE)
 create_dirs:
 	$(TEST) -d $(BIN_DIR) || $(MKDIR) $(BIN_DIR)
 	$(TEST) -d $(LIB_DIR) || $(MKDIR) $(LIB_DIR)
 	$(TEST) -d $(OBJECTDIR) || $(MKDIR) $(OBJECTDIR)
 clean:
 	$(RM) $(OBJECT_FILE) $(TARGET) $(QT_MOCSOURCE) $(QT_RCCSOURCE) $(QT_UICSOURCE)
+	if [ x$(EXE) != "x" ] ; then  $(RM) $(BIN_DIR)/$(EXE); fi
+	if [ x$(MODULE) != "x" ];  then $(RM) $(LIB_DIR)/lib$(MODULE).a; fi
 ```
-2. define file rules:
+
+3. define file rules, include QT and dependency rules:
 ```
 $(OBJECTDIR)/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS) 
@@ -82,7 +107,7 @@ $(OBJECTDIR)/%.dep: %.cpp
 	$(RM) $@.$$$$
 ```
  
-# local Makfile
+# Local Makfile
 1. Use a shell script to get the "make.incl" file and include it.
 ```
 INCL_FILE := $(shell path="."; \
@@ -98,32 +123,23 @@ INCL_FILE := $(shell path="."; \
               echo $$ret)
 include $(INCL_FILE)
 ```
-2. define related binary directory variable
+2. define related object directory variable
 ```
 OBJECTDIR:=$(patsubst $(ROOT)/%, $(OBJROOT)/%, $(CURDIR))
 ```
-3. Define the QT use files variables:
+3. Define the QT use files variables and SOURCE files:
 ```
 QT_MOCFILE = TasksManager.h MainWindow.h
 QT_RCCFILE =
 QT_UICFILE = mainwindow.ui 	 
-```
-4. Define Target, source files and local compile related flags.
-```
-TARGET = $(BIN_DIR)/customfault
 SOURCE_FILE = main.cpp LicManager.cpp TasksManager.cpp MainWindow.cpp \
 $(QT_MOCSOURCE) $(QT_RCCSOURCE)
+```
+4. Define Target EXE: for executable, MODULE: for library and 
+   local compile related flags.
+```
+EXE = customfault
 LOCAL_LIBS = -lscl -lutils
-```
-5. include dependency files
-```
-include $(DEP_FILES)
-```
-6. define rules:
-```
-all: create_dirs $(TARGET)
-$(TARGET): $(QT_UICSOURCE) $(OBJECT_FILE) 
-     $(CXX) -o $@ $(OBJECT_FILE) $(LDFLAGS) $(LOCAL_LIBS) $(LIBS) 
 ```
 7. include "make.incl2"
 ```
@@ -141,6 +157,12 @@ ROOT := $(strip $(patsubst %/make.incl, %,$(word $(words $(MAKEFILE_LIST)), $(MA
 OBJROOT := $(ROOT)/object_root
 
 #
+# set bin and lib output directories
+#
+BIN_DIR := ${OBJROOT}/bin
+LIB_DIR := ${OBJROOT}/lib
+
+#
 #  set compiler and related shell commands
 #
 CC := /depot/qsc/QSCO/bin/gcc
@@ -153,11 +175,6 @@ RM := rm -f
 SED := sed
 TEST := test
 
-#
-# set bin and lib output directories
-#
-BIN_DIR := ${OBJROOT}/bin
-LIB_DIR := ${OBJROOT}/lib
 
 #
 # Qt special function
@@ -171,30 +188,38 @@ QT_RCCSOURCE = $(addprefix qrc_, $(addsuffix .cpp, $(basename $(QT_RCCFILE))))
 QT_UICSOURCE = $(addprefix ui_, $(addsuffix .h, $(basename $(QT_UICFILE))))
 OBJECT_FILE = $(addprefix $(OBJECTDIR)/, $(addsuffix .o, $(basename $(SOURCE_FILE))))
 DEP_FILES = $(addprefix $(OBJECTDIR)/, $(addsuffix .dep, $(basename $(SOURCE_FILE))))
-
 #
 # global compile related flags
 #
-CFLAGS := -I. -I../include -I$(QT_ROOT)/include/QtCore -I$(QT_ROOT)/include/QtNetwork -I$(QT_ROOT)/include/QtGui 
-CXXFLAGS := -I. -I../include -I$(QT_ROOT)/include/QtCore -I$(QT_ROOT)/include/QtNetwork -I$(QT_ROOT)/include/QtGui 
+CFLAGS := -I. -I$(ROOT)/lmserver/src/include -I$(QT_ROOT)/include/QtCore -I$(QT_ROOT)/include/QtNetwork -I$(QT_ROOT)/include/QtGui 
+CXXFLAGS := -I. -I$(ROOT)/lmserver/src/include -I$(QT_ROOT)/include/QtCore -I$(QT_ROOT)/include/QtNetwork -I$(QT_ROOT)/include/QtGui 
 LDFLAGS :=  -static-libgcc /depot/qsc/QSCO/GCC/lib64/libstdc++.a -static-libstdc++ -L$(LIB_DIR) -L/global/libs/qt_qsck_2015.06/4.8.5/linux64_optimized/lib
 LIBS := $(QT_LIBS) -pthread -ldl -lz
 ```
 "make.incl2"
 ```
-# -*-Makefile-*-
-#  make patterns, needed to include after all variables are setting well
-#
+include $(DEP_FILES)
+
+all: create_dirs $(EXE) $(MODULE)
+
+$(EXE): $(QT_UICSOURCE) $(OBJECT_FILE) 
+	$(CXX) -o $(BIN_DIR)/$@ $(OBJECT_FILE) $(LDFLAGS) $(LOCAL_LIBS) $(LIBS) 
+
+$(MODULE): $(QT_UICSOURCE) $(OBJECT_FILE)
+	$(AR) -cvq $(LIB_DIR)/lib$@.a $(OBJECT_FILE)
+
 create_dirs:
 	$(TEST) -d $(BIN_DIR) || $(MKDIR) $(BIN_DIR)
 	$(TEST) -d $(LIB_DIR) || $(MKDIR) $(LIB_DIR)
 	$(TEST) -d $(OBJECTDIR) || $(MKDIR) $(OBJECTDIR)
 
 clean:
-	$(RM) $(OBJECT_FILE) $(TARGET) $(QT_MOCSOURCE) $(QT_RCCSOURCE) $(QT_UICSOURCE)
-
-$(OBJECTDIR)/%.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS) 
+	$(RM) $(OBJECT_FILE) $(QT_MOCSOURCE) $(QT_RCCSOURCE) $(QT_UICSOURCE) $(DEP_FILES)
+	if [ x$(EXE) != "x" ] ; then  $(RM) $(BIN_DIR)/$(EXE); fi
+	if [ x$(MODULE) != "x" ];  then $(RM) $(LIB_DIR)/lib$(MODULE).a; fi
+ 
+# $(OBJECTDIR)/%.o: %.c
+#	$(CC) -c $< -o $@ $(CFLAGS) 
 
 $(OBJECTDIR)/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS) 
@@ -213,6 +238,7 @@ $(OBJECTDIR)/%.dep: %.cpp
 	$(CXX) -M $(CXXFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\).o[ :]*,$(OBJECTDIR)/\1.o $@ : ,g' <  $@.$$$$ > $@; \
 	$(RM) $@.$$$$
+
 ```
 Root Makefile
 ```
@@ -248,17 +274,9 @@ QT_MOCFILE = TasksManager.h MainWindow.h
 QT_RCCFILE =
 QT_UICFILE = mainwindow.ui 
 
-TARGET = $(BIN_DIR)/customfault
+EXE = customfault
 SOURCE_FILE = main.cpp LicManager.cpp TasksManager.cpp MainWindow.cpp $(QT_MOCSOURCE) $(QT_RCCSOURCE)
 LOCAL_LIBS = -lscl -lutils
 
-include $(DEP_FILES)
-
-all: create_dirs $(TARGET)
-
-$(TARGET): $(QT_UICSOURCE) $(OBJECT_FILE) 
-	$(CXX) -o $@ $(OBJECT_FILE) $(LDFLAGS) $(LOCAL_LIBS) $(LIBS) 
-
 include $(ROOT)/make.incl2
-
 ```
