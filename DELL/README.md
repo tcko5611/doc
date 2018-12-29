@@ -17,3 +17,16 @@
 1. Java
 2. librepilot
 3. dropbox
+
+# install E6420 in ubuntu
+## show the network
+```
+lshw -c network
+lsspci -nnk | grep -iA2 net
+rfkill list all
+```
+## install the driver for wifi and start it
+```
+sudo apt install bcmwl-kernel-source
+sudo modprobe wl
+```
