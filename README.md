@@ -13,5 +13,5 @@
 * [cpp](cpp/README.md)
 * [doxygen](doxygen/README.md)
 * [vim](vim/README.md)
-* [ubuntu](ubutu/README.md)
+* [ubuntu](ubuntu/README.md)
 

@@ -2,7 +2,7 @@
 
 # Setting keys
 1. (global-set-key (kbd "<f2>") 'set-mark-command) 
-2. (global-set-key (kbd "<f1>") 'goto-line)
+2. (global-set-key (kbd "M-g") 'goto-line)
 
 # load library
 ```
