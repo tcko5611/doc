@@ -22,7 +22,7 @@
   * [CMAKE_SOURCE_DIR and PROJECT_SOURCE_DIR](#CMAKE_SOURCE_DIR-and-PROJECT_SOURCE_DIR)
   * [CMAKE_BINARY_DIR, CMAKE_CURRENT_BINARY_DIR, CMAKE_CURRENT_SOURCE_DIR](#CMAKE_BINARY_DIR,-CMAKE_CURRENT_BINARY_DIR,-CMAKE_CURRENT_SOURCE_DIR)
 * [function and macro](#function-and-macro)
-  
+* [Flex and Bison](#Flex-and-Bison)
 # Build system
 * Using CMAKELists.txt file for each target
 * platform: -G 'MSYS Makefiles'
@@ -43,6 +43,56 @@ $ make VERBOSE=1
 cmake_minimum_required(VERSION 3.2)
 project(testPilot)
 ```
+## set gcc and g++
+There are three methods to set gcc and g++ for cmake
+### use environment variables
+This method the value will read from CMake cache, 
+the export will need to do once.
+```
+export CC=/usr/local/bin/gcc
+export CXX=/usr/local/bin/g++
+cmake /path/to/your/project
+make
+```
+### Without cache
+*these commands need to in frontof project*
+This time you create a "normal" variable "CMAKE_C(XX)_COMPILER". 
+If you have multiple platform to build, 
+you need to change CMakeLists every time.
+```
+set(CMAKE_C_COMPILER /usr/bin/clang CACHE PATH "")
+set(CMAKE_CXX_COMPILER /usr/bin/clang++ CACHE PATH "")
+```
+
+## set output directory
+* global
+```
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+```
+* target
+```
+set_target_properties(dspfpy PROPERTIES
+  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test"
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test"
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test"
+  )
+```
+
+## add compiler and linker flags
+```
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+set(GXX_COMPILE_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GXX_COMPILE_FLAGS}" )
+set(GCC_COMPILE_FLAGS "-Wall")
+set(CMAKE_C_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}" )
+
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+set(CMAKE_SHARED_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+set(CMAKE_STATIC_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+```
+
 ## add subdirectory to build
 ```
 add_subdirectory(app)
@@ -54,17 +104,11 @@ add_library(quickwidgetproxy SHARED quickwidgetproxy.cpp)
 
 ## add executable 
 ```
+FIND_LIBRARY(PYTHON_LIBRARY python3.5m /depotbld/RHEL6.6/Python-3.5.2/lib)
 add_executable(test_serial testserial.cpp)
-target_link_libraries (test_serial utils serial)
+target_link_libraries (test_serial utils serial ${PYTHON_LIBRARY})
 ```
-## set output directory
-* global
-```
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-```
-* special target
+* special target properties
 ```
 set_target_properties( targets...
     PROPERTIES
@@ -72,6 +116,7 @@ set_target_properties( targets...
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+set_target_properties(dspfpy PROPERTIES PREFIX "")
 ```
 
 ## add definitions
@@ -202,5 +247,63 @@ arg = ABC
 # After change the value of arg.
 arg = abc
 ```
+real test case
+```
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+```
+macro file
+```
+#CompilePython.cmake
+macro(add_python_target tgt)
+  foreach(file ${ARGN})
+    set(OUT ${CMAKE_BINARY_DIR}/test/${file}c)
+    list(APPEND OUT_FILES ${OUT})
+    add_custom_command(OUTPUT ${OUT}
+      COMMAND ${CMAKE_SOURCE_DIR}/utils/compile.py ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${OUT}
+      )
+  endforeach()
 
-conclution: They are string replacements much like the C preprocessor would do with a macro. If you want true CMake variables and/or better CMake scope control you should look at the function command.
+  add_custom_target(${tgt} ALL DEPENDS ${OUT_FILES})
+endmacro()
+```
+use add_python_target
+```
+include(CompilePython)
+add_python_target(RptDspfRes RptDspfRes.py)
+```
+conclution: They are string replacements much like the C preprocessor
+would do with a macro. If you want true CMake variables and/or better
+CMake scope control you should look at the function command.
+
+# Flex and Bison
+Using the follwoing command to treat flex and bison and generate exprlex and exprparse function to use as parser, need to open file to exprin
+```
+FIND_PACKAGE(BISON REQUIRED)
+SET(BisonOutput ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
+IF(BISON_FOUND)
+    ADD_CUSTOM_COMMAND(
+      OUTPUT ${BisonOutput}
+      COMMAND ${BISON_EXECUTABLE}
+        --defines=${CMAKE_CURRENT_BINARY_DIR}/tokens.h
+        --output=${BisonOutput}
+	--name-prefix=expr
+        ${CMAKE_CURRENT_SOURCE_DIR}/parser.yy
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/parser.yy
+      COMMENT "Generating parser.cpp"
+    )
+ENDIF()
+
+FIND_PACKAGE(FLEX REQUIRED)
+SET(FlexOutput ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp)
+IF(FLEX_FOUND)
+    ADD_CUSTOM_COMMAND(
+      OUTPUT ${FlexOutput}
+      COMMAND ${FLEX_EXECUTABLE}
+        --outfile=${FlexOutput}
+        --prefix=expr
+        ${CMAKE_CURRENT_SOURCE_DIR}/scanner.ll
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scanner.ll
+      COMMENT "Generating scanner.cpp"
+    )
+ENDIF()
+```

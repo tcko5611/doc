@@ -180,3 +180,19 @@ class Foo:
 x = Foo()
 x(1, 2, 3) # __call__
 ```
+
+# compile python file
+```
+#! /depot/Python-3.5.2/bin/python
+import sys
+import py_compile
+#import argparse
+if __name__ == '__main__' :
+#    parser = argparse.ArgumentParser(description='compile python file')
+#    parser.add_argument('-i', '--input', metavar='input_file', type=str, required=True, \
+#                        help = 'input python file'    )
+#    parser.add_argument('-o', '--output', metavar='output_file', type=str, required=True,# \
+#                        help = 'output compiled python file')
+#    args = parser.parse_args()
+    py_compile.compile(sys.argv[1], sys.argv[2])
+```
