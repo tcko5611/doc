@@ -1,5 +1,7 @@
 [HOME](../README.md)
 
+[grep sed](grepAndSed.md)
+
 # Variables
 * $0: the bash shell script name
 * $1, $2...: the arguments of command line
@@ -59,4 +61,43 @@
 * function <name> or <name> (): Create a function called name.
 * return <value>: Exit the function with a return status of value.
 * local <name>=<value>: Create a local variable within a function.
-* command <command>: Run the command with that name as opposed to the function with the same name.
+* command <command>: Run the command with that name as opposed to the
+  function with the same name.
+
+# login shell and non login shell
+* login shell: first process executes under your user ID when you log
+  in for an interactive session.
+  * Bourne shell: read */etc/profile*, *~/.profile*
+  * bash: read addtional file */etc/profile*, *~/.bash_profile*,
+    *~/.bash_login* and *~/.profile*
+  * csh: read */etc/csh.login*, ~/.login*
+  * tcsh: read */etc/csh.cshrc*, */etc/csh.login*, *~/.tcshrc*,
+    *~/.cshrc*, *~/.history*, *~/.login*
+* non-login shell: start a shell in an existing session.
+  * bash: read */.bashrc*
+  * csh: read */etc/csh.cshrc* and *~/.cshrc* 
+  * tcsh: read */etc/csh.cshrc* and *~/.tcshrc* or *~/.cshrc* 
+
+# Typical use of bash 
+## use array
+```
+declare -a arr
+arr[0]=$line
+arr[1]="aa"
+echo ${arr[0]}
+echo ${arr[1]}
+```
+## use of utility result
+```
+aa=`bc <<< "scale=2; (${arr[1]} - ${arr[0]}) / ${arr[1]}"`
+```
+
+## test for float variable
+```
+if (( $(echo "$aa < 0.1" | bc -l) ))
+then
+  ...
+else
+  ...
+fi
+```
