@@ -16,4 +16,5 @@
 * [ubuntu](ubuntu/README.md)
 * [flexBison](flexBison/README.md)
 * [qt](qt/README.md)
+* [json](rapidJson/README.md)
 

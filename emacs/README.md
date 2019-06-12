@@ -21,3 +21,6 @@
 
 ## Numeric Arguments
 * **Ctrl-u** n, repeat n times for the next command
+
+# Gdb
+* use **set startup-with-shell off** to avoid invoke subprocess with shell
