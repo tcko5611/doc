@@ -17,4 +17,5 @@
 * [flexBison](flexBison/README.md)
 * [qt](qt/README.md)
 * [mysql](mysql/README.md)
+* [json](rapidJson/README.md)
 
