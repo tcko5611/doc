@@ -23,6 +23,7 @@
   * [CMAKE_BINARY_DIR, CMAKE_CURRENT_BINARY_DIR, CMAKE_CURRENT_SOURCE_DIR](#CMAKE_BINARY_DIR,-CMAKE_CURRENT_BINARY_DIR,-CMAKE_CURRENT_SOURCE_DIR)
 * [function and macro](#function-and-macro)
 * [Flex and Bison](#Flex-and-Bison)
+* [Misc](#Misc)
 # Build system
 * Using CMAKELists.txt file for each target
 * platform: -G 'MSYS Makefiles'
@@ -307,3 +308,27 @@ IF(FLEX_FOUND)
     )
 ENDIF()
 ```
+
+# Misc
+For create a static library combines from several static libary, 
+it will need the help from ar. 
+Like the following case we want to create a libntv.a for lib*.a, then we need to write a script.ar
+```
+> ls
+libbasic.a  libnetlist.a  libntv1.a     libutil.a
+libgui.a    libntv.a      libtreemap.a  script.ar
+[ktc@fshi502 lib]> more script.ar 
+CREATE libntv.a
+ADDLIB libbasic.a
+ADDLIB libgui.a
+ADDLIB libnetlist.a
+ADDLIB libntv1.a
+ADDLIB libtreemap.a
+ADDLIB libutil.a
+SAVE
+END
+[ktc@fshi502 lib]> /depot/qsc/QSCP/binutils/bin/ar -M < script.ar
+
+```
+* ar: create, modify, and extract from archives
+* ranlib: generate index to archive
