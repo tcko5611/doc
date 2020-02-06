@@ -20,3 +20,25 @@
   $ cd ../html
   $ firefox index.html
   ```
+
+# Basic style
+## for class
+```
+/**
+  class description
+*/
+```
+## for function
+```
+/**
+  function description
+  @param param1 Param1 description
+  @param param2 Param2 description
+  @return Return description
+*/
+```
+
+## for variable
+```
+int a /**< variable description */
+```
