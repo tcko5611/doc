@@ -21,5 +21,7 @@ The keywords are:
 # Invoke gdb
 When invoke gdb, it will run with a default shell for you, so if you
 have addtional environment variables need to use in debug, make sure
-you have the correct way to use gdb.
+you have the correct way to use gdb. 
+If you don't want to invoke *gdb* with a shell, 
+use *set startup-with-shell off* don't to start process with a shell. 
 
