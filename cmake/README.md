@@ -24,7 +24,7 @@
 * [function and macro](#function-and-macro)
 * [Flex and Bison](#Flex-and-Bison)
 # Build system
-* Using CMAKELists.txt file for each target
+* Using CMakeLists.txt file for each target
 * platform: -G 'MSYS Makefiles'
 * build type: 
   * -DCMAKE_BUILD_TYPE=Debug
