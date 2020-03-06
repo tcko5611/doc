@@ -4,6 +4,9 @@
 Using *-E* to enable regular expression utility
 
 # sed
+## regular expression
+* \\+: one or mode
+* \*: 0 or more
 ## change results to what we want
 ```
 sed 's/.*Physical: \([0-9]*\) MB.*/\1/g'

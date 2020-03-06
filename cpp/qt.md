@@ -4,7 +4,7 @@
 * [Signal Slot](#Signal-Slot)
 * [GUI](#GUI)
 * [Tcp](#Tcp)
-
+* [Error](#Error)
 # Signal Slot
 ## Basic mechanism
 A simple code for signal and slot is like follows:
@@ -217,3 +217,10 @@ private:
 ```
 It's interesting client work as a listener to socket, 
 so it need to enter event loop by QCoreApplication. 
+
+# Error
+## QXcbConnection: XCB error
+
+* Error : QXcbConnection: XCB error: 3...
+* Solution: export QT_LOGGING_RULES='*.debug=false;qt.qpa.*=false'
+
