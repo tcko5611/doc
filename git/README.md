@@ -1,5 +1,5 @@
 [HOME](../README.md)
 
-* [git init](01.md)
-* [git part depo](02.md)
+* [git init](git_init.md)
+* [git part depo](git_part_depo.md)
 * [p4 git](p4_git.md)
