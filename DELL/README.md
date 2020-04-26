@@ -1,6 +1,6 @@
 [HOME](../README.md)
 # Restore the system of windows for E7440
-1. goto dell web and save the windows to usb
+1. goto dell web and save the windows to usb :girl:
 2. using dell F12 key to enter new entrance for usb
 3. start build the new system
 
