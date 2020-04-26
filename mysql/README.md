@@ -35,7 +35,7 @@ mysql> FLUSH PRIVILEGES;
 # Create and show DATABASE 
 ```
 mysql> CREATE DATABASE 'moneydb'
-mysql> show database; /* all databases */
+mysql> show databases; /* all databases */
 mysql> use moneydb; 
 mysql> select database(); /* show current database */
 ```
