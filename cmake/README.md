@@ -34,7 +34,7 @@
 ```
 $ mkdir Debug
 $ cd Debug
-$ cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug
+$ cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
 $ make VERBOSE=1
 ```
 
@@ -152,6 +152,10 @@ It will also affect in link process.
 add_custom_command(TARGET MyTarget PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_SOURCE_DIR}/config $<TARGET_FILE_DIR:MyTarget>)
+add_custom_command(TARGET abc
+        POST_BUILD
+        COMMAND /bin/sh /path/to/my_script
+        )
 ```
 ### output
 ```
