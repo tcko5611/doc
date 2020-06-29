@@ -25,3 +25,6 @@ you have the correct way to use gdb.
 If you don't want to invoke *gdb* with a shell, 
 use *set startup-with-shell off* don't to start process with a shell. 
 
+## options for start up
+* **-n**: Do not execute commands from any .gdbinit initialization files.
+* **-x file**: Execute GDB commands from file file.

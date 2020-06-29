@@ -14,6 +14,7 @@
 * ": will replace variable for inside string
 * export: will let other process use the variable
 * variable=$(command): save the output of a command into a variable.
+* variable=$((5+5)): arithmetic expansion
 
 # Input
 * read varName: Read input from the user and store it in the variable varName.
@@ -34,6 +35,7 @@
 * case: Choose a set of commands to execute depending on a string matching a particular pattern.
 
 # Test expression
+* use [[ ]]
 * ! EXPRESSION:	The EXPRESSION is false.
 * -n STRING: The length of STRING is greater than zero.
 * -z STRING: The lengh of STRING is zero (ie it is empty).
